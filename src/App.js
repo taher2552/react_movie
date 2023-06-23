@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import StarRating from "./StarRating.js";
 import { useMovie } from "./useMovie.js";
 import { useLocalStorage } from "./useLocalStorage.js";
+import { useKey } from "./useKey.js";
 
 
 
@@ -168,24 +169,7 @@ function MovieDetails({selectedId , closeMovie, onAddWatched, watched }){
     closeMovie();
   }
 
-  useEffect(function(){
-
-    function callback(e){
-      if(e.code==="Escape"){
-        closeMovie();
-        console.log("Close")
-       }
-
-    }
-
-    document.addEventListener('keydown' , callback);
-
-    return function(){
-      document.removeEventListener('keydown', callback)
-    }
-  
-  },[closeMovie])
-
+    useKey('Escape', closeMovie)
   useEffect(function(){
     async function fetchMovieDetails(){
  
@@ -299,29 +283,40 @@ function Logo() {
 function Search({query, setQuery}) {
   const inputEl = useRef(null);
 
-useEffect(function(){
-  function callback(e){
+  useKey("Enter" , function(e){
+    
 
-    if(inputEl.current === document.activeElement){
-      return;
-
-    } 
-    else if(e.code==="Enter"){
+       if(inputEl.current === document.activeElement)
+            return;
       inputEl.current.focus();
       setQuery("");
-    }
-  }
+    
 
-  document.addEventListener("keydown" ,callback);
-  return ()=>document.addEventListener("keydown" , callback);
-},[setQuery])
+  })
+
+// useEffect(function(){
+//   function callback(e){
+
+//     if(inputEl.current === document.activeElement){
+//       return;
+//     } 
+
+//     if(e.code==="Enter"){
+//       inputEl.current.focus();
+//       setQuery("");
+//     }
+//   }
+
+//   document.addEventListener("keydown" ,callback);
+//   return ()=>document.addEventListener("keydown" , callback);
+// },[setQuery])
 
 
-  // useEffect(()=>{
-  //   // const el = document.querySelector('.search');
-  //   // el.focus();
-  //   inputEl.current.focus();
-  //  },[]);
+  useEffect(()=>{
+    // const el = document.querySelector('.search');
+    // el.focus();
+    inputEl.current.focus();
+   },[]);
  
   return (
     <input
